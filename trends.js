@@ -1,4 +1,17 @@
-const AVAILABLE_BOARDS = ["a", "g", "can", "int", "spa", "his", "sci"];
+const AVAILABLE_BOARDS = [
+  "a",
+  "c",
+  "can",
+  "g",
+  "his",
+  "k",
+  "sci",
+  "spa",
+  "vg",
+  "vint",
+  "vip",
+  "wsg"
+];
 const COLORS = [
   "#e41a1c",
   "#377eb8",
@@ -57,9 +70,9 @@ const chart = (container, data, options) => {
       responsive: true,
       title: {
         display: true,
-        text: `Normalized word frequencies for ${options.boards
+        text: `Normalized term frequencies for ${options.boards
           .map(b => `/${b}/`)
-          .join(", ")}`
+          .join(", ")} from ${options.fromDate} to ${options.toDate}`
       },
       tooltips: {
         mode: "index",
@@ -100,7 +113,9 @@ const query = (
   options = {
     boards: [],
     tags: [],
-    window: 86400
+    window: 86400,
+    fromDate: new Date(),
+    toDate: new Date()
   }
 ) => {
   const params = new URLSearchParams();
@@ -115,6 +130,8 @@ const query = (
   });
 
   params.append("window", options.window);
+  params.append("from", Date.parse(options.fromDate));
+  params.append("to", Date.parse(options.toDate));
 
   // Dummy data
   return fetch(
@@ -127,29 +144,48 @@ const query = (
 const init = (config = {}) => {
   const chartCanvas = document.querySelector("#chart");
 
+  // Dates
+  const fromDate = document.querySelector("#fromDate");
+  fromDate.value = new Date(
+    new Date().setFullYear(new Date().getFullYear() - 1)
+  )
+    .toISOString()
+    .split("T")[0];
+  const toDate = document.querySelector("#toDate");
+  toDate.value = new Date().toISOString().split("T")[0];
+
+  // Tags
   const tags = document.querySelector("input[name=tags]");
   const tagsInput = new Tagify(tags);
 
+  // Boards
   const boards = document.querySelector("input[name=boards]");
   const boardsInput = new Tagify(boards, {
     whitelist: AVAILABLE_BOARDS,
     keepInvalidTags: false,
     enforceWhitelist: true,
     dropdown: {
-      classname: "color-blue",
-      enabled: 0,
-      maxItems: 7
+      enabled: 0
     }
   });
 
+  document.querySelector("#allBoards").addEventListener("click", () => {
+    boardsInput.removeAllTags();
+    boardsInput.addTags(AVAILABLE_BOARDS);
+  });
+
+  // Window
   const windowDuration = document.querySelector("#window");
 
+  // Search
   const queryButton = document.querySelector("#query");
   queryButton.addEventListener("click", () => {
     const options = {
       boards: boardsInput.value.map(v => v.value),
       tags: tagsInput.value.map(v => v.value),
-      window: windowDuration.value
+      window: windowDuration.value,
+      fromDate: fromDate.value,
+      toDate: toDate.value
     };
 
     const interpolate = document.querySelector("#interpolate");
@@ -161,11 +197,14 @@ const init = (config = {}) => {
       .then(data => {
         chart(chartCanvas, data, {
           interpolate: interpolate.checked,
-          boards: options.boards
+          boards: options.boards,
+          fromDate: fromDate.value,
+          toDate: toDate.value
         });
       })
       .then(() => {
         setLoading(false);
+        document.querySelector("#chartHint").classList.toggle("hide", false);
         window.setTimeout(() => {
           chartCanvas.scrollIntoView({ block: "start" });
         }, 1000);
@@ -174,15 +213,6 @@ const init = (config = {}) => {
         window.alert(err);
         console.error(err);
       });
-  });
-
-  const fromDate = document.querySelector("#fromDate");
-  const toDate = document.querySelector("#toDate");
-  toDate.value = new Date().toISOString().split("T")[0];
-
-  document.querySelector("#allBoards").addEventListener("click", () => {
-    boardsInput.removeAllTags();
-    boardsInput.addTags(AVAILABLE_BOARDS);
   });
 };
 

@@ -47,10 +47,7 @@ canvas {
   background: #d6daf0;
   max-height: 90vh;
   max-width: calc(100vw - 2em - 2px);
-}
-
-#chart .x.axis text {
-  transform: rotateX(90deg);
+  padding: 1em 0;
 }
 
 label {

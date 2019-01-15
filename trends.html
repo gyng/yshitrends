@@ -18,7 +18,7 @@
           <input
             name="tags"
             id="tagInput"
-            placeholder="words"
+            placeholder="words or phrases"
             value="zoomer, boomer"
             autofocus
           />
@@ -51,14 +51,15 @@
             <label for="toDate">To</label> <input id="toDate" type="date" />
           </div>
         </div>
+        <div class="row hint">Data for some boards available since June 2015</div>
 
         <div class="row">
           <label for="window">Window size</label>
           <div>
             <select name="window" id="window">
               <option value="3600">1 hour</option>
-              <option value="86400" selected="selected">1 day</option>
-              <option value="604800">1 week</option>
+              <option value="86400">1 day</option>
+              <option value="604800" selected="selected">1 week</option>
               <option value="2592000">1 month</option>
             </select>
           </div>
@@ -79,6 +80,6 @@
     <canvas id="chart" width="0" height="0"></canvas>
 
     <div class="hide" id="loader">Loading&hellip;</div>
-    <div class="hint">Hint: Click on legend to toggle</div>
+    <div class="hide hint" id="chartHint">Hint: Click on legend to toggle</div>
   </body>
 </html>
