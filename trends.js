@@ -110,7 +110,8 @@ const query = (
   });
 
   options.tags.forEach(t => {
-    params.append("tsquery", t);
+    const spacified = t.replace(/ +/g, " <-> ");
+    params.append("tsquery", spacified);
   });
 
   params.append("window", options.window);
