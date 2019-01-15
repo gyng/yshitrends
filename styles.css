@@ -72,7 +72,11 @@ select {
 }
 
 .hint {
-  opacity: 0.5;
+  color: #789922;
   font-style: italic;
   margin-top: 0.5em;
+}
+
+h1 {
+  color: #af0a0f;
 }
