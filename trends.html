@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>🍀trends</title>
+    <script src="vendor/tagify.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="vendor/tagify.css" />
+    <script src="vendor/frappe.min.js"></script>
+    <script type="module" src="./trends.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <h1>🍀trends</h1>
+    <div id="controls">
+      <input
+        name="tags"
+        class=""
+        id="tagInput"
+        placeholder="write some tags"
+        value="zoomer, boomer"
+        autofocus
+      />
+
+      <input
+        name="boards"
+        class=""
+        id="tagInput"
+        placeholder="write some boards"
+        value="a"
+        autofocus
+      />
+      <button disabled>All boards</button>
+
+      <select id="window">
+        <option value="86400">86400 (1 day?)</option>
+      </select>
+
+      <button id="query">Query</button>
+
+      <button id="debug">Debug chart</button>
+    </div>
+    <div id="chart"></div>
+  </body>
+</html>
