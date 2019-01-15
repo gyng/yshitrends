@@ -1,0 +1,75 @@
+body {
+  background-color: rgb(183, 197, 217);
+  margin: 1em 0em;
+}
+
+@media (min-width: 500px) {
+  body {
+    margin: 1em;
+  }
+}
+
+.page {
+  background: #d6daf0;
+  padding: 1em;
+  margin: 0.5em 0em 0.5em 0em;
+  max-width: 900px;
+}
+
+.tagify {
+  background: #fff;
+}
+
+.boardControl {
+  display: flex;
+}
+
+.boardControl > .tagify {
+  flex: 1;
+}
+
+.row {
+  margin: 0.5em;
+}
+
+.datesInput {
+  display: flex;
+  flex-direction: row;
+}
+
+.dateInput {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1em;
+}
+
+canvas {
+  background: #d6daf0;
+  max-height: 90vh;
+  max-width: calc(100vw - 2em - 2px);
+}
+
+#chart .x.axis text {
+  transform: rotateX(90deg);
+}
+
+label {
+  line-height: 1.5em;
+}
+
+input,
+select {
+  padding: 0.5em;
+}
+
+#query {
+  padding: 1em 2em;
+}
+
+.hide {
+  display: none;
+}
+
+#loader {
+  margin: 1em 0;
+}

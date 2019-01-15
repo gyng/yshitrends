@@ -5,40 +5,79 @@
     <title>🍀trends</title>
     <script src="vendor/tagify.min.js"></script>
     <link rel="stylesheet" type="text/css" href="vendor/tagify.css" />
-    <script src="vendor/frappe.min.js"></script>
+    <script src="vendor/chart.bundle.min.js"></script>
     <script type="module" src="./trends.js"></script>
     <link rel="stylesheet" type="text/css" href="styles.css" />
   </head>
   <body>
     <h1>🍀trends</h1>
-    <div id="controls">
-      <input
-        name="tags"
-        class=""
-        id="tagInput"
-        placeholder="write some tags"
-        value="zoomer, boomer"
-        autofocus
-      />
+    <div class="page">
+      <div id="controls">
+        <div class="row">
+          <label for="tags">Tags to query</label>
+          <input
+            name="tags"
+            id="tagInput"
+            placeholder="words"
+            value="zoomer, boomer"
+            autofocus
+          />
+        </div>
 
-      <input
-        name="boards"
-        class=""
-        id="tagInput"
-        placeholder="write some boards"
-        value="a"
-        autofocus
-      />
-      <button disabled>All boards</button>
+        <div class="row">
+          <label for="boards">Boards to query</label>
+          <div class="boardControl">
+            <input
+              name="boards"
+              id="boardInput"
+              placeholder="boards"
+              value="a"
+            />
+            <button id="allBoards">All boards</button>
+          </div>
+        </div>
 
-      <select id="window">
-        <option value="86400">86400 (1 day?)</option>
-      </select>
+        <div class="row">
+          <label for="window">Data window size</label>
+          <div>
+            <select name="window" id="window">
+              <option value="3600">1 hour</option>
+              <option value="86400" selected="selected">1 day</option>
+              <option value="604800">1 week</option>
+              <option value="2592000">1 month</option>
+            </select>
+          </div>
+        </div>
 
-      <button id="query">Query</button>
+        <div class="row datesInput">
+          <div class="dateInput">
+            <label for="fromDate">From</label>
+            <input
+              name="fromDate"
+              id="fromDate"
+              type="date"
+              value="2015-06-01"
+            />
+          </div>
+          <div class="dateInput">
+            <label for="toDate">To</label> <input id="toDate" type="date" />
+          </div>
+        </div>
 
-      <button id="debug">Debug chart</button>
+        <div class="row">
+          <input
+            name="interpolate"
+            id="interpolate"
+            type="checkbox"
+            checked
+          /><label for="interpolate">Interpolate chart</label>
+        </div>
+        <div class="row"><button id="query">Go</button></div>
+      </div>
     </div>
-    <div id="chart"></div>
+
+    <div class="hide" id="loader">Loading&hellip;</div>
+
+    <canvas id="chart" width="0" height="0"></canvas>
   </body>
 </html>

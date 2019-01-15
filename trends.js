@@ -1,32 +1,97 @@
-const chart = data => {
+const AVAILABLE_BOARDS = ["a", "g", "can", "int", "spa", "his", "sci"];
+const COLORS = [
+  "#e41a1c",
+  "#377eb8",
+  "#4daf4a",
+  "#984ea3",
+  "#ff7f00",
+  "#ffff33",
+  "#a65628",
+  "#f781bf",
+  "#999999"
+];
+
+let chartEl;
+
+const setLoading = status => {
+  const loader = document.querySelector("#loader");
+  loader.classList.toggle("hide", !status);
+};
+
+const chart = (container, data, options) => {
   if (data.entries.length <= 0) {
-    console.log("nodata");
+    window.alert("No data found.");
     return;
   }
 
-  const labels = data.entries.map(e => e.when);
+  const labels = data.entries
+    .map(e => e.when)
+    .map(timestamp => new Date(timestamp * 1000));
 
   const tags = Object.keys(data.entries[0].filtered);
-  const datasets = tags.map(t => {
+  const datasets = tags.map((t, i) => {
     return {
-      name: t,
-      type: "line",
-      values: data.entries.map(d => d.filtered[t])
+      label: t,
+      data: data.entries.map(d => d.filtered[t]),
+      backgroundColor: COLORS[i % COLORS.length],
+      borderColor: COLORS[i % COLORS.length],
+      borderWidth: 1,
+      fill: false,
+      pointRadius: 0.6,
+      pointHoverRadius: 5,
+      lineTension: options.interpolate ? 0.4 : 0
     };
   });
 
-  const result = new frappe.Chart("#chart", {
-    title: "Normalised word frequencies",
+  if (chartEl) {
+    chartEl.destroy();
+  }
+
+  chartEl = new Chart(container, {
     data: {
       labels,
       datasets
     },
     type: "line",
-    height: 600,
-    lineOptions: {
-      hideDots: 1 // default: 0
+    options: {
+      responsive: true,
+      title: {
+        display: true,
+        text: `Normalized word frequencies for ${options.boards
+          .map(b => `/${b}/`)
+          .join(", ")}`
+      },
+      tooltips: {
+        mode: "index",
+        intersect: false
+      },
+      hover: {
+        mode: "index",
+        intersect: false,
+        animationDuration: 0
+      },
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: "Date"
+            }
+          }
+        ],
+        yAxes: [
+          {
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: "Value"
+            }
+          }
+        ]
+      }
     }
-    // colors: ["#7cd6fd", "#743ee2"]
   });
 };
 
@@ -59,18 +124,20 @@ const query = (
 };
 
 const init = (config = {}) => {
+  const chartCanvas = document.querySelector("#chart");
+
   const tags = document.querySelector("input[name=tags]");
   const tagsInput = new Tagify(tags);
 
   const boards = document.querySelector("input[name=boards]");
   const boardsInput = new Tagify(boards, {
-    whitelist: ["a", "g", "can", "int", "spa", "his", "sci"],
+    whitelist: AVAILABLE_BOARDS,
     keepInvalidTags: false,
     enforceWhitelist: true,
     dropdown: {
       classname: "color-blue",
-      enabled: 1,
-      maxItems: 5
+      enabled: 0,
+      maxItems: 7
     }
   });
 
@@ -84,14 +151,37 @@ const init = (config = {}) => {
       window: windowDuration.value
     };
 
+    const interpolate = document.querySelector("#interpolate");
+
+    setLoading(true);
+
     query(".", options)
       .then(res => res.json())
-      .then(chart)
-      .catch(console.error);
+      .then(data => {
+        chart(chartCanvas, data, {
+          interpolate: interpolate.checked,
+          boards: options.boards
+        });
+      })
+      .then(() => {
+        setLoading(false);
+        window.setTimeout(() => {
+          chartCanvas.scrollIntoView({ block: "start" });
+        }, 1000);
+      })
+      .catch(err => {
+        window.alert(err);
+        console.error(err);
+      });
   });
 
-  document.querySelector("#debug").addEventListener("click", () => {
-    chart();
+  const fromDate = document.querySelector("#fromDate");
+  const toDate = document.querySelector("#toDate");
+  toDate.value = new Date().toISOString().split("T")[0];
+
+  document.querySelector("#allBoards").addEventListener("click", () => {
+    boardsInput.removeAllTags();
+    boardsInput.addTags(AVAILABLE_BOARDS);
   });
 };
 
