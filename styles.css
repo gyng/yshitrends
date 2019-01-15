@@ -73,3 +73,9 @@ select {
 #loader {
   margin: 1em 0;
 }
+
+.hint {
+  opacity: 0.5;
+  font-style: italic;
+  margin-top: 0.5em;
+}
