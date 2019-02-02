@@ -24,6 +24,8 @@ const COLORS = [
   "#999999"
 ];
 
+const API_ROOT = "https://xn--9h8h.yshi.org/";
+
 let chartEl;
 
 const setLoading = status => {
@@ -109,7 +111,7 @@ const chart = (container, data, options) => {
 };
 
 const query = (
-  endpoint = "/search/time-series",
+  endpoint = `${API_ROOT}/search/time-series`,
   options = {
     boards: [],
     tags: [],
@@ -134,11 +136,11 @@ const query = (
   params.append("to", Date.parse(options.toDate));
 
   // Dummy data
-  return fetch(
-    "https://gist.githubusercontent.com/gyng/871e8ffd817f53013f216f3386d1dfd2/raw/6546646100c7ebaabd9c02ada1062b5b36062a12/mockdata.json"
-  );
+  // return fetch(
+  //   "https://gist.githubusercontent.com/gyng/871e8ffd817f53013f216f3386d1dfd2/raw/6546646100c7ebaabd9c02ada1062b5b36062a12/mockdata.json"
+  // );
 
-  // return fetch(`${endpoint}?${params.toString()}`);
+  return fetch(`${endpoint}?${params.toString()}`);
 };
 
 const init = (config = {}) => {
