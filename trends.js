@@ -45,9 +45,13 @@ const chart = (container, data, options) => {
 
   const tags = Object.keys(data.entries[0].filtered);
   const datasets = tags.map((t, i) => {
+    const processData = options.normalize
+      ? d => (d.filtered[t] / d.total) * 1000
+      : d => d.filtered[t];
+
     return {
       label: t,
-      data: data.entries.map(d => d.filtered[t]),
+      data: data.entries.map(processData),
       backgroundColor: COLORS[i % COLORS.length],
       borderColor: COLORS[i % COLORS.length],
       borderWidth: 1,
@@ -72,7 +76,9 @@ const chart = (container, data, options) => {
       responsive: true,
       title: {
         display: true,
-        text: `Normalized term frequencies for ${options.boards
+        text: `${
+          options.normalize ? "Normalized" : "Absolute"
+        } term frequencies for ${options.boards
           .map(b => `/${b}/`)
           .join(", ")} from ${options.fromDate} to ${options.toDate}`
       },
@@ -191,6 +197,7 @@ const init = (config = {}) => {
     };
 
     const interpolate = document.querySelector("#interpolate");
+    const normalize = document.querySelector("#normalize");
 
     setLoading(true);
 
@@ -198,6 +205,7 @@ const init = (config = {}) => {
       .then(res => res.json())
       .then(data => {
         chart(chartCanvas, data, {
+          normalize: normalize.checked,
           interpolate: interpolate.checked,
           boards: options.boards,
           fromDate: fromDate.value,

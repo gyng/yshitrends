@@ -1,3 +1,3 @@
 # yshitrends
 
-Lightweight visualisation frontend for yshitrends
+Minimal, standalone, lightweight visualisation frontend for yshitrends
