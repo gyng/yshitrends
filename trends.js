@@ -24,7 +24,8 @@ const COLORS = [
   "#999999"
 ];
 
-const API_ROOT = "https://xn--9h8h.yshi.org/";
+const API_ROOT = "https://xn--9h8h.yshi.org";
+const API_QUERY_ENDPOINT = "/search/time-series";
 
 let chartEl;
 
@@ -117,7 +118,7 @@ const chart = (container, data, options) => {
 };
 
 const query = (
-  endpoint = `${API_ROOT}/search/time-series`,
+  endpoint = API_QUERY_ENDPOINT,
   options = {
     boards: [],
     tags: [],
@@ -201,7 +202,7 @@ const init = (config = {}) => {
 
     setLoading(true);
 
-    query(".", options)
+    query(`${API_ROOT}${API_QUERY_ENDPOINT}`, options)
       .then(res => res.json())
       .then(data => {
         chart(chartCanvas, data, {
